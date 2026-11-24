@@ -1,0 +1,12 @@
+---
+import Portal from '../../layouts/Portal.astro';
+---
+<Portal rol="recepcion" activo="pacientes" titulo="Pacientes">
+  <div id="vista"></div>
+</Portal>
+
+<script>
+  import { iniciar } from '../../lib/app';
+  import { pacientesRecepcion } from '../../paginas/recepcion';
+  iniciar(pacientesRecepcion);
+</script>

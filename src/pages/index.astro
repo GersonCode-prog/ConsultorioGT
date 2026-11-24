@@ -1,0 +1,329 @@
+---
+// Sitio público de la clínica + presentación de los portales
+import Publico from '../layouts/Publico.astro';
+import { ROLES } from '../lib/clinica';
+import { icono } from '../lib/iconos';
+import { ruta } from '../lib/ruta';
+import { ORDEN_ROLES, PUNTOS_ROL, USUARIO_DEMO } from '../lib/presentacion';
+
+const portales = ORDEN_ROLES.map((rol) => ({ rol, usuario: USUARIO_DEMO[rol], puntos: PUNTOS_ROL[rol] }));
+const pasos = [
+  { icono: 'estetoscopio', titulo: 'Elige especialidad y médico', texto: 'Mira su horario, consultorio y precio antes de decidir.' },
+  { icono: 'calendario', titulo: 'Escoge día y hora', texto: 'Solo ves los horarios libres. Sin llamadas ni filas.' },
+  { icono: 'sala', titulo: 'Llega y te anuncian', texto: 'Recepción registra tu llegada y tu médico te ve en la sala de espera.' },
+  { icono: 'pildora', titulo: 'Receta e historial en línea', texto: 'Tu receta, signos vitales y pagos quedan en tu portal.' },
+];
+---
+<Publico titulo="Clínica Médica Vida Plena · ConsultorioGT" rol="medico">
+  <div class="sitio">
+    <header class="s-cab" id="cabecera">
+      <div class="s-contenedor s-cab-in">
+        <a class="s-marca" href={ruta('/')}>
+          <span class="s-logo"><Fragment set:html={icono('actividad', 22)} /></span>
+          <span>Consultorio<b>GT</b><small data-cfg="clinica">Clínica Médica Vida Plena</small></span>
+        </a>
+        <nav class="s-nav" aria-label="Secciones">
+          <a href="#especialidades">Especialidades</a><a href="#medicos">Médicos</a><a href="#como">Cómo funciona</a><a href="#portales">Portales</a><a href="#contacto">Contacto</a>
+        </nav>
+        <a class="s-btn s-btn-primario" id="btn-ingresar" href={ruta('/login')}><Fragment set:html={icono('entrar', 18)} /> <span>Ingresar</span></a>
+      </div>
+    </header>
+
+    <section class="s-hero">
+      <div class="s-contenedor s-hero-in">
+        <div class="s-hero-texto">
+          <span class="s-pastilla">🩺 <span data-cfg="lema">Tu salud, en buenas manos</span></span>
+          <h1>Agenda tu cita médica <span class="s-degradado">en minutos</span></h1>
+          <p>Especialistas para toda la familia en un solo lugar. Elige tu médico, escoge el horario y recibe tu receta e historial en línea.</p>
+          <div class="s-acciones">
+            <a class="s-btn s-btn-primario s-btn-grande" href={ruta('/login?rol=paciente')}>Agendar mi cita <Fragment set:html={icono('derecha', 18)} /></a>
+            <a class="s-btn s-btn-claro s-btn-grande" href="#especialidades">Ver especialidades</a>
+          </div>
+          <div class="s-confianza">
+            <span class="s-horario"><Fragment set:html={icono('reloj', 18)} /></span>
+            <p><strong>Lunes a sábado · <span id="horario">7:00 a. m. – 6:00 p. m.</span></strong><br /><span data-cfg="direccion">Ciudad de Guatemala</span></p>
+          </div>
+        </div>
+
+        <div class="s-mock" aria-hidden="true">
+          <div class="s-ventana">
+            <div class="s-ventana-barra"><i></i><i></i><i></i><em>consultoriogt · agendar cita</em></div>
+            <div class="s-ventana-cuerpo">
+              <div class="s-mini-pasos"><span class="hecho"></span><span class="hecho"></span><span class="hecho"></span><span></span></div>
+              <div class="s-mini-medico"><span>🩺</span><div><strong>Dra. Andrea Morales</strong><small>Medicina General · Consultorio 1</small></div><b>Q200</b></div>
+              <div class="s-mini-dias">{['Lun', 'Mar', 'Mié', 'Jue', 'Vie'].map((d, i) => <span class:list={[{ activo: i === 2 }]}><small>{d}</small><b>{24 + i}</b></span>)}</div>
+              <div class="s-mini-slots">{['7:30', '8:00', '9:00', '10:30', '11:00', '12:00'].map((h, i) => <span class:list={[{ activo: i === 3, lleno: i === 1 }]}>{h}</span>)}</div>
+              <div class="s-mini-boton">Confirmar cita ✓</div>
+            </div>
+          </div>
+          <div class="s-flota s-f1"><span>✅</span><div><strong>Cita confirmada</strong><small>Miércoles 10:30 a. m.</small></div></div>
+          <div class="s-flota s-f2"><span>💊</span><div><strong>Receta disponible</strong><small>Lista para imprimir</small></div></div>
+          <div class="s-flota s-f3"><span>🪑</span><div><strong>Te anunciamos</strong><small>Tu médico ya sabe que llegaste</small></div></div>
+        </div>
+      </div>
+      <div class="s-contenedor">
+        <div class="s-cifras">
+          <div><b data-cuenta="especialidades">8</b><span>Especialidades</span></div>
+          <div><b data-cuenta="medicos">9</b><span>Médicos</span></div>
+          <div><b data-cuenta="pacientes">65</b><span>Pacientes</span></div>
+          <div><b data-cuenta="consultas">400</b><span>Consultas este mes</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s-seccion" id="especialidades">
+      <div class="s-contenedor">
+        <div class="s-titulo"><span class="s-etiqueta">Especialidades</span><h2>Atención para toda la familia</h2><p>Desde un resfriado hasta el control de tu corazón.</p></div>
+        <div class="s-esps" id="lista-esp"></div>
+      </div>
+    </section>
+
+    <section class="s-seccion s-seccion-blanca" id="medicos">
+      <div class="s-contenedor">
+        <div class="s-titulo"><span class="s-etiqueta">Nuestro equipo</span><h2>Conoce a nuestros médicos</h2><p>Con horario, consultorio y precio de consulta a la vista.</p></div>
+        <div class="s-medicos" id="lista-medicos"></div>
+      </div>
+    </section>
+
+    <section class="s-seccion" id="como">
+      <div class="s-contenedor">
+        <div class="s-titulo"><span class="s-etiqueta">Cómo funciona</span><h2>Tu consulta, paso a paso</h2></div>
+        <div class="s-pasos">{pasos.map((p, i) => (
+          <div class="s-paso"><span class="s-paso-num">{i + 1}</span><span class="s-paso-icono"><Fragment set:html={icono(p.icono, 24)} /></span><h3>{p.titulo}</h3><p>{p.texto}</p></div>
+        ))}</div>
+      </div>
+    </section>
+
+    <section class="s-seccion s-seccion-blanca" id="portales">
+      <div class="s-contenedor">
+        <div class="s-titulo"><span class="s-etiqueta">Portales</span><h2>Un portal para cada persona</h2><p>Pacientes, médicos, recepción y administración trabajan conectados.</p></div>
+        <div class="s-portales">{portales.map((p) => (
+          <article class="s-portal" style={`--c:${ROLES[p.rol].color}`}>
+            <span class="s-portal-emoji">{ROLES[p.rol].emoji}</span>
+            <h3>{ROLES[p.rol].portal}</h3>
+            <p>{ROLES[p.rol].descripcion}</p>
+            <ul>{p.puntos.map((x) => <li><Fragment set:html={icono('check', 16)} />{x}</li>)}</ul>
+            <a class="s-portal-btn" href={ruta(`/login?rol=${p.rol}`)}>Entrar como {ROLES[p.rol].nombre.toLowerCase()} <Fragment set:html={icono('derecha', 16)} /></a>
+          </article>
+        ))}</div>
+        <div class="s-demo">
+          <div><span class="s-etiqueta s-etiqueta-clara">Demostración</span><h2>Pruébalo ahora mismo 🧪</h2>
+            <p>Entra con cualquiera de estas cuentas. La contraseña de todas es <b>12345</b>. Los datos son ficticios y se guardan solo en tu navegador.</p></div>
+          <div class="s-demo-cuentas">{portales.map((p) => (
+            <a href={ruta(`/login?rol=${p.rol}`)} style={`--c:${ROLES[p.rol].color}`}><span>{ROLES[p.rol].emoji}</span><div><strong>{p.usuario}</strong><small>{ROLES[p.rol].nombre}</small></div><Fragment set:html={icono('derecha', 16)} /></a>
+          ))}</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="s-pie" id="contacto">
+      <div class="s-contenedor s-pie-in">
+        <div>
+          <a class="s-marca s-marca-clara" href={ruta('/')}><span class="s-logo"><Fragment set:html={icono('actividad', 22)} /></span><span>Consultorio<b>GT</b><small data-cfg="clinica">Clínica Médica Vida Plena</small></span></a>
+          <p class="s-lema">“<span data-cfg="lema">Tu salud, en buenas manos</span>”</p>
+          <a class="s-btn s-btn-claro" style="margin-top:1.2rem" href={ruta('/login?rol=paciente')}>Agendar cita</a>
+        </div>
+        <div>
+          <h4>Contacto</h4>
+          <p><Fragment set:html={icono('ubicacion', 16)} /> <span data-cfg="direccion">Ciudad de Guatemala</span></p>
+          <p><Fragment set:html={icono('telefono', 16)} /> <span data-cfg="telefono">2300-4500</span></p>
+          <p><Fragment set:html={icono('mensajes', 16)} /> WhatsApp <span data-cfg="whatsapp">5500-4500</span></p>
+          <p><Fragment set:html={icono('correo', 16)} /> <span data-cfg="correo">citas@vidaplena.demo</span></p>
+        </div>
+        <div>
+          <h4>Portales</h4>
+          {portales.map((p) => <p><a href={ruta(`/login?rol=${p.rol}`)}>{ROLES[p.rol].portal}</a></p>)}
+        </div>
+      </div>
+      <div class="s-contenedor s-pie-abajo">
+        <span>© {new Date().getFullYear()} <span data-cfg="clinica">Clínica Médica Vida Plena</span></span>
+        <span>Sistema de demostración con datos ficticios · Hecho con Astro</span>
+      </div>
+    </footer>
+  </div>
+</Publico>
+
+<script>
+  import { obtener, config } from '../lib/datos';
+  import { leerSesion } from '../lib/sesion';
+  import { ROLES, medicosActivos, nombreMedicoCompleto, especialidad, colorMedico, textoHora, DIAS_CORTOS } from '../lib/clinica';
+  import { avatar } from '../lib/vistas';
+  import { escapar, moneda, hoy } from '../lib/formato';
+  import { ruta } from '../lib/ruta';
+
+  const cfg = config() as unknown as Record<string, string | number>;
+  document.querySelectorAll<HTMLElement>('[data-cfg]').forEach((el) => { const v = cfg[el.dataset.cfg!]; if (v !== undefined && v !== '') el.textContent = String(v); });
+  document.getElementById('horario')!.textContent = `${textoHora(String(cfg.horaApertura))} – ${textoHora(String(cfg.horaCierre))}`;
+
+  const cuentas: Record<string, number> = {
+    especialidades: obtener('especialidades').length, medicos: medicosActivos().length, pacientes: obtener('pacientes').length,
+    consultas: obtener('consultas').filter((c) => c.fecha.slice(0, 7) === hoy().slice(0, 7)).length,
+  };
+  document.querySelectorAll<HTMLElement>('[data-cuenta]').forEach((el) => {
+    const fin = cuentas[el.dataset.cuenta!] ?? 0; const inicio = performance.now();
+    const paso = (t: number) => { const p = Math.min(1, (t - inicio) / 900); el.textContent = String(Math.round(fin * (1 - Math.pow(1 - p, 3)))); if (p < 1) requestAnimationFrame(paso); };
+    requestAnimationFrame(paso);
+  });
+
+  const s = leerSesion();
+  if (s && ROLES[s.rol]) {
+    const b = document.getElementById('btn-ingresar') as HTMLAnchorElement;
+    b.href = ruta(`/${s.rol}/`); b.querySelector('span')!.textContent = 'Ir a mi portal';
+  }
+
+  const medicos = medicosActivos();
+  document.getElementById('lista-esp')!.innerHTML = obtener('especialidades').map((e) => {
+    const ms = medicos.filter((m) => m.especialidadId === e.id);
+    return `<a class="s-esp" style="--c:${e.color}" href="${ruta(`/login?rol=paciente`)}"><span class="s-esp-icono">${e.icono}</span><h3>${escapar(e.nombre)}</h3><p>${escapar(e.descripcion)}</p>
+      <small>${ms.length ? `${ms.length} médico${ms.length > 1 ? 's' : ''} · desde ${moneda(Math.min(...ms.map((m) => m.precio)))}` : 'Próximamente'}</small></a>`;
+  }).join('');
+  document.getElementById('lista-medicos')!.innerHTML = medicos.map((m) => {
+    const e = especialidad(m.especialidadId);
+    return `<div class="s-medico" style="--c:${colorMedico(m)}">${avatar(nombreMedicoCompleto(m), colorMedico(m), 'lg')}
+      <div class="s-medico-info"><strong>${escapar(nombreMedicoCompleto(m))}</strong><span class="s-medico-esp">${e?.icono} ${escapar(e?.nombre ?? '')}</span><p>${escapar(m.bio)}</p>
+      <div class="s-medico-pie"><small>📅 ${m.dias.map((d) => DIAS_CORTOS[d]).join(', ')} · ${textoHora(m.horaInicio)} – ${textoHora(m.horaFin)}</small><b>${moneda(m.precio)}</b></div></div></div>`;
+  }).join('');
+
+  const cab = document.getElementById('cabecera')!;
+  const sombra = () => cab.classList.toggle('con-sombra', scrollY > 8);
+  addEventListener('scroll', sombra, { passive: true }); sombra();
+</script>
+
+<style is:global>
+  .sitio { --oscuro: #0b2e2b; --acento: #0d9488; background: #f6faf9; overflow-x: clip; }
+  .s-contenedor { width: min(1180px, 100% - 2.5rem); margin-inline: auto; }
+  .s-cab { position: sticky; top: 0; z-index: 50; background: rgba(246, 250, 249, .82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid transparent; transition: border-color .2s, box-shadow .2s; }
+  .s-cab.con-sombra { border-color: var(--borde); box-shadow: 0 6px 24px rgba(15, 23, 42, .06); }
+  .s-cab-in { display: flex; align-items: center; gap: 1.5rem; height: 72px; }
+  .s-marca { display: flex; align-items: center; gap: .7rem; font-weight: 800; font-size: 1.2rem; letter-spacing: -.02em; line-height: 1.1; }
+  .s-marca b { color: var(--acento); }
+  .s-marca small { display: block; font-size: .7rem; font-weight: 600; color: var(--texto-3); letter-spacing: 0; }
+  .s-logo { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #0d9488, #0891b2); box-shadow: 0 8px 20px rgba(13, 148, 136, .3); }
+  .s-nav { display: flex; gap: .2rem; margin-left: auto; }
+  .s-nav a { padding: .5rem .8rem; border-radius: 10px; font-weight: 600; font-size: .92rem; color: var(--texto-2); transition: background .15s, color .15s; }
+  .s-nav a:hover { background: #fff; color: var(--texto); }
+  .s-btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .7rem 1.15rem; border-radius: 12px; font-weight: 700; font-size: .92rem; border: 1px solid transparent; cursor: pointer; transition: transform .15s, box-shadow .15s; white-space: nowrap; }
+  .s-btn:hover { transform: translateY(-1px); }
+  .s-btn-primario { background: var(--acento); color: #fff; box-shadow: 0 8px 20px rgba(13, 148, 136, .28); }
+  .s-btn-claro { background: #fff; border-color: var(--borde); color: var(--texto); }
+  .s-btn-grande { padding: .95rem 1.4rem; font-size: 1rem; border-radius: 14px; }
+
+  .s-hero { position: relative; padding: 4.5rem 0 3rem; }
+  .s-hero::before { content: ''; position: absolute; inset: -72px 0 0; pointer-events: none;
+    background: radial-gradient(620px 400px at 85% 10%, rgba(13, 148, 136, .17), transparent 70%), radial-gradient(520px 360px at 60% 75%, rgba(124, 58, 237, .1), transparent 70%), radial-gradient(420px 300px at 5% 20%, rgba(37, 99, 235, .08), transparent 70%); }
+  .s-hero > * { position: relative; }
+  .s-hero-in { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 3.5rem; align-items: center; }
+  .s-hero-in > * { min-width: 0; }
+  .s-pastilla { display: inline-flex; align-items: center; gap: .35rem; padding: .45rem .9rem; border-radius: 999px; background: #fff; border: 1px solid var(--borde); font-size: .82rem; font-weight: 700; color: var(--texto-2); box-shadow: var(--sombra); }
+  .s-hero h1 { font-size: clamp(2.3rem, 5vw, 3.7rem); line-height: 1.06; letter-spacing: -.035em; font-weight: 800; margin: 1.2rem 0 1rem; }
+  .s-degradado { background: linear-gradient(90deg, #0d9488, #0891b2 50%, #7c3aed); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .s-hero-texto > p { font-size: 1.12rem; color: var(--texto-2); max-width: 34rem; }
+  .s-acciones { display: flex; gap: .8rem; flex-wrap: wrap; margin: 2rem 0; }
+  .s-confianza { display: flex; align-items: center; gap: .9rem; }
+  .s-horario { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: #fff; color: var(--acento); box-shadow: var(--sombra); flex-shrink: 0; }
+  .s-confianza p { font-size: .88rem; color: var(--texto-2); line-height: 1.45; }
+  .s-confianza strong { color: var(--texto); }
+
+  .s-mock { position: relative; padding: 1.5rem 1.5rem 2.5rem; }
+  .s-ventana { border-radius: 20px; background: #fff; box-shadow: 0 30px 80px rgba(15, 23, 42, .16), 0 0 0 1px rgba(15, 23, 42, .05); overflow: hidden; transform: perspective(1400px) rotateY(-6deg) rotateX(3deg); }
+  .s-ventana-barra { display: flex; align-items: center; gap: .4rem; padding: .7rem 1rem; background: #f8fafc; border-bottom: 1px solid var(--borde); }
+  .s-ventana-barra i { width: 11px; height: 11px; border-radius: 50%; background: #fca5a5; }
+  .s-ventana-barra i:nth-child(2) { background: #fcd34d; } .s-ventana-barra i:nth-child(3) { background: #86efac; }
+  .s-ventana-barra em { margin-left: .8rem; font-style: normal; font-size: .72rem; color: var(--texto-3); font-weight: 600; }
+  .s-ventana-cuerpo { padding: 1.2rem; display: grid; gap: .9rem; }
+  .s-mini-pasos { display: flex; gap: .35rem; } .s-mini-pasos span { flex: 1; height: 5px; border-radius: 9px; background: #eef2f6; } .s-mini-pasos .hecho { background: #7c3aed; }
+  .s-mini-medico { display: flex; align-items: center; gap: .7rem; padding: .8rem; border-radius: 14px; background: #f5f3ff; }
+  .s-mini-medico > span { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: #fff; font-size: 1.2rem; }
+  .s-mini-medico div { flex: 1; display: grid; line-height: 1.3; } .s-mini-medico strong { font-size: .92rem; } .s-mini-medico small { font-size: .74rem; color: var(--texto-3); }
+  .s-mini-dias { display: grid; grid-template-columns: repeat(5, 1fr); gap: .4rem; }
+  .s-mini-dias span { text-align: center; padding: .45rem 0; border-radius: 11px; border: 1.5px solid var(--borde); line-height: 1.15; }
+  .s-mini-dias small { display: block; font-size: .64rem; font-weight: 700; color: var(--texto-3); text-transform: uppercase; } .s-mini-dias b { font-size: 1rem; }
+  .s-mini-dias .activo { border-color: #7c3aed; background: #f5f3ff; color: #5b21b6; }
+  .s-mini-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: .4rem; }
+  .s-mini-slots span { text-align: center; padding: .45rem; border-radius: 10px; border: 1.5px solid var(--borde); font-weight: 700; font-size: .8rem; }
+  .s-mini-slots .activo { background: #7c3aed; border-color: #7c3aed; color: #fff; } .s-mini-slots .lleno { opacity: .35; text-decoration: line-through; }
+  .s-mini-boton { text-align: center; padding: .7rem; border-radius: 12px; background: #7c3aed; color: #fff; font-weight: 800; font-size: .88rem; }
+  .s-flota { position: absolute; display: flex; align-items: center; gap: .65rem; padding: .7rem .95rem; border-radius: 14px; background: #fff; box-shadow: 0 16px 40px rgba(15, 23, 42, .15); font-size: .8rem; animation: s-flotar 5s ease-in-out infinite; }
+  .s-flota > span { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: #f1f5f9; font-size: 1rem; }
+  .s-flota strong { display: block; font-size: .82rem; } .s-flota small { color: var(--texto-3); font-weight: 600; }
+  .s-f1 { left: -1.4rem; bottom: .4rem; } .s-f2 { right: -.5rem; top: 0; animation-delay: -1.6s; } .s-f3 { right: 1rem; bottom: -1.2rem; animation-delay: -3.2s; }
+  @keyframes s-flotar { 50% { transform: translateY(-8px); } }
+
+  .s-cifras { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 3.5rem; background: #fff; border: 1px solid var(--borde); border-radius: 20px; box-shadow: var(--sombra); }
+  .s-cifras div { padding: 1.4rem; text-align: center; display: grid; } .s-cifras div + div { border-left: 1px solid var(--borde); }
+  .s-cifras b { font-size: 2.2rem; font-weight: 800; letter-spacing: -.03em; background: linear-gradient(135deg, #0d9488, #7c3aed); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .s-cifras span { font-size: .85rem; font-weight: 700; color: var(--texto-2); }
+
+  .s-seccion { padding: 5rem 0; } .s-seccion-blanca { background: #fff; border-block: 1px solid var(--borde); }
+  .s-titulo { text-align: center; max-width: 40rem; margin: 0 auto 3rem; }
+  .s-titulo h2 { font-size: clamp(1.8rem, 3.5vw, 2.5rem); font-weight: 800; letter-spacing: -.03em; margin: .7rem 0 .6rem; }
+  .s-titulo p { color: var(--texto-2); font-size: 1.05rem; }
+  .s-etiqueta { display: inline-block; padding: .35rem .8rem; border-radius: 999px; background: #ccfbf1; color: #115e59; font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+  .s-etiqueta-clara { background: rgba(255, 255, 255, .14); color: #fff; }
+
+  .s-esps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+  .s-esp { padding: 1.4rem; border-radius: 20px; background: #fff; border: 1px solid var(--borde); transition: transform .2s, box-shadow .2s, border-color .2s; display: flex; flex-direction: column; gap: .4rem; }
+  .s-esp:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(15, 23, 42, .08); border-color: color-mix(in srgb, var(--c) 40%, white); }
+  .s-esp-icono { width: 52px; height: 52px; border-radius: 15px; display: grid; place-items: center; font-size: 1.5rem; background: color-mix(in srgb, var(--c) 13%, white); margin-bottom: .4rem; }
+  .s-esp h3 { font-size: 1.05rem; font-weight: 800; } .s-esp p { font-size: .86rem; color: var(--texto-2); flex: 1; }
+  .s-esp small { font-weight: 700; color: var(--c); font-size: .8rem; }
+
+  .s-medicos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+  .s-medico { display: flex; gap: 1rem; padding: 1.2rem; border-radius: 20px; border: 1px solid var(--borde); background: #fbfdfc; position: relative; overflow: hidden; }
+  .s-medico::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--c); }
+  .s-medico-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .25rem; }
+  .s-medico-info strong { font-size: .98rem; } .s-medico-esp { font-size: .8rem; font-weight: 700; color: var(--c); }
+  .s-medico-info p { font-size: .84rem; color: var(--texto-2); flex: 1; }
+  .s-medico-pie { display: flex; justify-content: space-between; align-items: center; gap: .5rem; margin-top: .4rem; padding-top: .5rem; border-top: 1px dashed var(--borde-2); }
+  .s-medico-pie small { font-size: .74rem; color: var(--texto-3); font-weight: 600; } .s-medico-pie b { color: var(--texto); }
+
+  .s-pasos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.1rem; }
+  .s-paso { position: relative; padding: 1.6rem 1.3rem; border-radius: 20px; background: #fff; border: 1px solid var(--borde); }
+  .s-paso-num { position: absolute; top: 1rem; right: 1.1rem; font-size: 2.4rem; font-weight: 800; color: #e2f3f1; line-height: 1; }
+  .s-paso-icono { width: 50px; height: 50px; border-radius: 15px; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #0d9488, #0891b2); margin-bottom: 1rem; }
+  .s-paso h3 { font-size: 1rem; font-weight: 800; margin-bottom: .3rem; } .s-paso p { font-size: .88rem; color: var(--texto-2); }
+
+  .s-portales { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.1rem; margin-bottom: 2.5rem; }
+  .s-portal { position: relative; display: flex; flex-direction: column; padding: 1.5rem 1.3rem 1.3rem; border-radius: 20px; background: #fff; border: 1px solid var(--borde); box-shadow: var(--sombra); overflow: hidden; transition: transform .2s, box-shadow .2s; }
+  .s-portal::before { content: ''; position: absolute; inset: 0 0 auto; height: 5px; background: var(--c); }
+  .s-portal:hover { transform: translateY(-4px); box-shadow: 0 22px 44px rgba(15, 23, 42, .1); }
+  .s-portal-emoji { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; font-size: 1.6rem; background: color-mix(in srgb, var(--c) 12%, white); margin-bottom: 1rem; }
+  .s-portal h3 { font-size: 1.08rem; font-weight: 800; } .s-portal > p { font-size: .86rem; color: var(--texto-2); margin: .35rem 0 1rem; }
+  .s-portal ul { list-style: none; display: grid; gap: .45rem; margin-bottom: 1.3rem; }
+  .s-portal li { display: flex; gap: .45rem; font-size: .84rem; font-weight: 600; } .s-portal li svg { color: var(--c); margin-top: .15rem; }
+  .s-portal-btn { margin-top: auto; display: flex; align-items: center; justify-content: center; gap: .4rem; padding: .7rem; border-radius: 12px; font-weight: 700; font-size: .86rem; color: var(--c); background: color-mix(in srgb, var(--c) 10%, white); transition: background .15s, color .15s; }
+  .s-portal-btn:hover { background: var(--c); color: #fff; }
+
+  .s-demo { display: grid; grid-template-columns: 1fr 1.1fr; gap: 2.5rem; align-items: center; padding: 3rem; border-radius: 28px; color: #fff; background: radial-gradient(500px 300px at 0% 0%, rgba(13, 148, 136, .55), transparent 70%), radial-gradient(500px 300px at 100% 100%, rgba(124, 58, 237, .45), transparent 70%), var(--oscuro); box-shadow: 0 30px 70px rgba(15, 23, 42, .22); }
+  .s-demo h2 { font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight: 800; letter-spacing: -.03em; margin: .7rem 0; }
+  .s-demo p { color: rgba(255, 255, 255, .78); }
+  .s-demo p b { color: #fff; background: rgba(255, 255, 255, .14); padding: .1rem .45rem; border-radius: 6px; font-family: ui-monospace, Consolas, monospace; }
+  .s-demo-cuentas { display: grid; grid-template-columns: repeat(2, 1fr); gap: .7rem; }
+  .s-demo-cuentas a { display: flex; align-items: center; gap: .75rem; padding: .8rem .95rem; border-radius: 14px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .12); transition: background .15s, transform .15s; }
+  .s-demo-cuentas a:hover { background: rgba(255, 255, 255, .14); transform: translateY(-2px); }
+  .s-demo-cuentas a > span { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; background: var(--c); font-size: 1.05rem; }
+  .s-demo-cuentas div { flex: 1; display: grid; line-height: 1.25; }
+  .s-demo-cuentas strong { font-family: ui-monospace, Consolas, monospace; font-size: .92rem; } .s-demo-cuentas small { color: rgba(255, 255, 255, .6); font-size: .76rem; font-weight: 600; }
+
+  .s-pie { background: var(--oscuro); color: rgba(255, 255, 255, .72); padding: 3.5rem 0 1.5rem; }
+  .s-pie-in { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 2rem; padding-bottom: 2.5rem; border-bottom: 1px solid rgba(255, 255, 255, .1); }
+  .s-marca-clara { color: #fff; } .s-marca-clara b { color: #5eead4; } .s-marca-clara small { color: rgba(255, 255, 255, .55); }
+  .s-lema { margin-top: 1rem; font-weight: 600; color: rgba(255, 255, 255, .8); }
+  .s-pie h4 { color: #fff; font-size: .92rem; margin-bottom: .8rem; }
+  .s-pie p { display: flex; align-items: center; gap: .5rem; font-size: .88rem; margin-bottom: .45rem; } .s-pie a:hover { color: #fff; }
+  .s-pie-abajo { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding-top: 1.3rem; font-size: .8rem; color: rgba(255, 255, 255, .5); }
+
+  @media (max-width: 1020px) {
+    .s-nav { display: none; } .s-btn-primario#btn-ingresar { margin-left: auto; }
+    .s-hero-in { grid-template-columns: minmax(0, 1fr); gap: 2rem; } .s-mock { max-width: 540px; margin-inline: auto; width: 100%; }
+    .s-esps, .s-pasos, .s-portales { grid-template-columns: repeat(2, minmax(0, 1fr)); } .s-medicos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .s-demo { grid-template-columns: 1fr; padding: 2rem; }
+  }
+  @media (max-width: 640px) {
+    .s-hero { padding-top: 2.5rem; } .s-seccion { padding: 3.5rem 0; }
+    .s-cifras { grid-template-columns: repeat(2, 1fr); } .s-cifras div:nth-child(3) { border-left: 0; } .s-cifras div:nth-child(n + 3) { border-top: 1px solid var(--borde); }
+    .s-esps, .s-pasos, .s-portales, .s-medicos, .s-pie-in, .s-demo-cuentas { grid-template-columns: 1fr; }
+    .s-ventana { transform: none; } .s-f1 { left: -.3rem; } .s-f2 { right: -.3rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .s-flota { animation: none; } }
+</style>

@@ -1,0 +1,12 @@
+---
+import Portal from '../../layouts/Portal.astro';
+---
+<Portal rol="paciente" activo="historial" titulo="Mi historial">
+  <div id="vista"></div>
+</Portal>
+
+<script>
+  import { iniciar } from '../../lib/app';
+  import { historialPaciente } from '../../paginas/paciente';
+  iniciar(historialPaciente);
+</script>
